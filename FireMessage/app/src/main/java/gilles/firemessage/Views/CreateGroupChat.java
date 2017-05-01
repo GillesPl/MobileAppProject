@@ -1,5 +1,6 @@
 package gilles.firemessage.Views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import gilles.firemessage.Adapters.MessageAdapter;
 import gilles.firemessage.Adapters.UsersAdapter;
 import gilles.firemessage.Constants;
+import gilles.firemessage.Models.GroupChat;
 import gilles.firemessage.Models.Message;
 import gilles.firemessage.Models.User;
 import gilles.firemessage.R;
@@ -40,10 +43,14 @@ public class CreateGroupChat extends AppCompatActivity {
 
     private ArrayList<User> users = new ArrayList<>();
 
+    private ArrayList<User> addedUsers = new ArrayList<>();
+
     private Context ctx = this;
 
     private DatabaseReference rootref = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference usersref = rootref.child(Constants.USERS_LOCATION);
+    private DatabaseReference chatsref = rootref.child(Constants.CHAT_LOCATION);
+
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser user;
@@ -53,11 +60,11 @@ public class CreateGroupChat extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group_chat);
-        setTitle("Create group");
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        setTitle("Create group");
 
         editgroup = (EditText) findViewById(R.id.editTextgroup);
         btngroup = (Button) findViewById(R.id.buttonCreateGroup);
@@ -71,8 +78,16 @@ public class CreateGroupChat extends AppCompatActivity {
                     //create the group or send back to main activity
                     Intent intent = new Intent();
                     intent.putExtra("grouptext", editgroup.getText().toString());
-                    //TODO:when clicked on btn return to main activity, some kind of bug because of onBackPressed()???
-                    setResult(RESULT_OK,intent);
+                    User currentUser = new User(user.getUid(),user.getEmail());
+                    addedUsers.add(currentUser);
+
+                    String id = chatsref.push().getKey();
+                    GroupChat groupchat = new GroupChat(id,editgroup.getText().toString());
+                    chatsref.child(id).setValue(groupchat);
+                    chatsref.child(id).child("users").setValue(addedUsers);
+
+                    setResult(Activity.RESULT_OK,intent);
+                    finish();
                 }
             }
         });
@@ -83,9 +98,12 @@ public class CreateGroupChat extends AppCompatActivity {
                 dataSnapshot.getChildrenCount();
                 //TODO:Maak performanter!!!
                 users.clear();
+                User currentuser = new User(user.getUid(),user.getEmail());
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     User post = postSnapshot.getValue(User.class);
-                    users.add(post);
+                    if (post.getEmail() != currentuser.getEmail()) {
+                        users.add(post);
+                    }
                     Log.e("Get Data", post.toString());
                 }
 
@@ -99,13 +117,15 @@ public class CreateGroupChat extends AppCompatActivity {
             }
         });
 
-        btngroup.setOnClickListener(new View.OnClickListener() {
+
+        usersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View view) {
-                //TODO : add user to list of users to add to chat
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                User clickedUser = (User) adapterView.getItemAtPosition(i);
+                //TODO: when clicked on a user remove the button or change the ui to non clickable
+                addedUsers.add(clickedUser);
             }
         });
-
 
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {

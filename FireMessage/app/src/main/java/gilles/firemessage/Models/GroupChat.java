@@ -26,6 +26,12 @@ public class GroupChat {
         this.lastMessage = lastMessage;
     }
 
+    public GroupChat(String id, String title, ArrayList<User> users) {
+        this.id = id;
+        this.title = title;
+        this.users = users;
+    }
+
     public GroupChat() {
 
     }

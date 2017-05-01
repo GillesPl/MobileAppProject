@@ -1,16 +1,23 @@
 package gilles.firemessage.Views;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import gilles.firemessage.Adapters.GroupChatAdapter;
 import gilles.firemessage.Adapters.MessageAdapter;
@@ -41,6 +49,7 @@ public class MessageActivity extends AppCompatActivity {
     private EditText textMsg;
 
     ArrayList<Message> msgs = new ArrayList<Message>();;
+    private FirebaseListAdapter<Message> mMessageListAdapter;
 
     //firebase elements
     private DatabaseReference rootref = FirebaseDatabase.getInstance().getReference();
@@ -62,8 +71,26 @@ public class MessageActivity extends AppCompatActivity {
         final String groupid = extras.getString(Constants.GROUPID);
         final DatabaseReference groupMessagesRef = messagesref.child(groupid);
 
-
         if(groupid != null) {
+            mMessageListAdapter = new FirebaseListAdapter<Message>(this,Message.class,R.layout.message_row,groupMessagesRef) {
+                @Override
+                protected void populateView(View v, Message msg, int position) {
+                    TextView title = (TextView) v.findViewById(R.id.textView_message);
+                    //LinearLayout msgline = (LinearLayout) v.findViewById(R.id.msgLine);
+                    title.setText(msg.getMessage());
+                    if(Objects.equals(msg.getAuthor().getEmail(), user.getEmail())) {
+                        title.setBackground(getDrawable(R.drawable.rounded_corner_primary));
+                        title.setGravity(Gravity.RIGHT);
+                    }
+                    else {
+                        title.setGravity(Gravity.LEFT);
+                        title.setBackground(getDrawable(R.drawable.rounded_corner_white));
+                    }
+                }
+            };
+        }
+
+       /* if(groupid != null) {
             groupMessagesRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -85,7 +112,7 @@ public class MessageActivity extends AppCompatActivity {
 
                 }
             });
-        }
+        }*/
 
 
 
@@ -102,6 +129,8 @@ public class MessageActivity extends AppCompatActivity {
         sendMsgButton = (Button) findViewById(R.id.sendButton);
         textMsg = (EditText) findViewById(R.id.messageToSend);
 
+
+        messageListView.setAdapter(mMessageListAdapter);
 
         sendMsgButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +191,11 @@ public class MessageActivity extends AppCompatActivity {
 
         //clear text
         textMsg.setText("");
+
+    }
+
+
+    private void showMessages() {
 
     }
 

@@ -23,4 +23,7 @@ public class Message {
         return message;
     }
 
+    public User getAuthor() {
+        return author;
+    }
 }

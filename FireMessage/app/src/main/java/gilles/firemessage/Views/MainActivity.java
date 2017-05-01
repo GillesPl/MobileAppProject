@@ -135,9 +135,7 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 if(user != null) {
                     String groupname = data.getStringExtra("grouptext");
-                    String id = chatsref.push().getKey();
-                    GroupChat groupchat = new GroupChat(id,groupname);
-                    chatsref.child(id).setValue(groupchat);
+                    Toast.makeText(MainActivity.this,"Group " + groupname + "has been made",Toast.LENGTH_SHORT).show();
                 }
                 else {
                     //TODO: make toast where it says you have to be logged in
