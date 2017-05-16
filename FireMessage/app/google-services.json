@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "160311467856-rrgi3dnabk6ieu20deh4091aqk0tcoiu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "gilles.firemessage",
+            "certificate_hash": "7efe5d3eaa7b4968e52d2b7c814e6801507f0249"
+          }
+        },
+        {
           "client_id": "160311467856-7c1ro995lhttodva39jgucuiqhvg9evd.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -23,14 +23,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
 import gilles.firemessage.Constants;
 import gilles.firemessage.Models.Message;
+import gilles.firemessage.Models.Notification;
 import gilles.firemessage.Models.User;
 import gilles.firemessage.R;
+import gilles.firemessage.Services.MyFirebaseMessagingService;
 
 public class MessageActivity extends AppCompatActivity {
 
@@ -51,6 +54,7 @@ public class MessageActivity extends AppCompatActivity {
     private DatabaseReference rootref = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference messagesref = rootref.child(Constants.MESSAGE_LOCATION);
     private DatabaseReference groupref = rootref.child(Constants.CHAT_LOCATION);
+    private DatabaseReference notifref = rootref.child(Constants.NOTIFICATIONS_LOCATION);
 
     private FirebaseUser user;
 
@@ -221,17 +225,31 @@ public class MessageActivity extends AppCompatActivity {
 
 
     private void sendMessage(DatabaseReference ref, String groupid) {
-        String id = messagesref.push().getKey();
         String msg = textMsg.getText().toString();
-        User u = new User(user.getUid(),user.getEmail());
+        if(!msg.equals("")) {
+            String id = messagesref.push().getKey();
+            User u = new User(user.getUid(),user.getEmail());
 
-        //add message to database
-        ref.child(id).setValue(new Message(msg,u));
-        groupref.child(groupid).child("lastMessage").setValue(msg.toString());
+            //add message to database
+            ref.child(id).setValue(new Message(msg,u));
+            groupref.child(groupid).child("lastMessage").setValue(msg.toString());
 
-        //clear text
-        textMsg.setText("");
 
+            Notification notifs = new Notification();
+            notifs.setUid(user.getUid());
+            notifs.setEmail(user.getEmail());
+            //The uid and topic are the same. since the topic of this notification is
+            // the postId of this post, any subscribed to this post will recieve this
+            // notification
+            String notikey = notifref.push().getKey();
+            notifs.setUid(notikey);
+            notifs.setTopic(groupid);
+            notifs.setText(msg);
+            notifref.child(notikey).setValue(notifs);
+            FirebaseMessaging.getInstance().subscribeToTopic(groupid);
+            //clear text
+            textMsg.setText("");
+        }
     }
 
 

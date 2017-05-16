@@ -10,6 +10,7 @@ public class Constants {
     public static final String USERS_LOCATION = "users";
     public static final String CHAT_LOCATION = "chats";
     public static final String MESSAGE_LOCATION = "messages";
+    public static final String NOTIFICATIONS_LOCATION = "notifications";
 
     public static final String GROUPID = "groupid";
     public static final String GROUPNAME = "groupname";

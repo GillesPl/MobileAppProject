@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import gilles.firemessage.Adapters.GroupMessageAdapter;
 import gilles.firemessage.Adapters.UsersAdapter;
 import gilles.firemessage.Constants;
 import gilles.firemessage.Models.GroupChat;
@@ -67,14 +68,13 @@ public class GroupMessageActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         groupid = extras.getString(Constants.GROUPID);
 
-
         chatref.child(groupid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 groupchat = dataSnapshot.getValue(GroupChat.class);
                 groupTitle.setText(groupchat.getTitle());
-
-                UsersAdapter adapter = new UsersAdapter(ctx,groupchat.getUsers());
+                setTitle(groupchat.getTitle());
+                GroupMessageAdapter adapter = new GroupMessageAdapter(ctx,groupchat.getUsers());
                 usersList.setAdapter(adapter);
             }
 

@@ -17,11 +17,11 @@ import gilles.firemessage.Models.User;
 import gilles.firemessage.R;
 
 /**
- * Created by Gilles on 14/04/2017.
+ * Created by Gilles on 16-May-17.
  */
 
-public class UsersAdapter extends ArrayAdapter<User> {
-    public UsersAdapter(@NonNull Context context, ArrayList<User> resource) {
+public class GroupMessageAdapter extends ArrayAdapter<User> {
+    public GroupMessageAdapter(@NonNull Context context, ArrayList<User> resource) {
         super(context,0, resource);
     }
 
@@ -30,22 +30,17 @@ public class UsersAdapter extends ArrayAdapter<User> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        User user = getItem(position);
+        User usr = getItem(position);
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.user_row, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.group_message_user_row, parent, false);
         }
 
 
-        ImageView image = (ImageView) convertView.findViewById(R.id.addImageView);
-        TextView username = (TextView) convertView.findViewById(R.id.textViewUser);
 
-        username.setText(user.getEmail());
-        image.setBackgroundResource(R.drawable.add);
-        image.setScaleType(ImageView.ScaleType.CENTER);
+        TextView username = (TextView) convertView.findViewById(R.id.groupmessagetxt);
 
-
-
+        username.setText(usr.getEmail());
 
 
         return convertView;

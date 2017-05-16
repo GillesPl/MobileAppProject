@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.security.acl.Group;
 import java.util.ArrayList;
@@ -114,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     getChats();
+                    subscribeToTopics();
                 } else {
                     // User is signed out
                     messageListView.setAdapter(null);
@@ -212,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
 
                     GroupChatAdapter adapter = new GroupChatAdapter(ctx, groupchats);
                     messageListView.setAdapter(adapter);
+                subscribeToTopics();
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -219,5 +222,16 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+
+    private void changeStatusUser(boolean loggedIn) {
+
+    }
+
+    private void subscribeToTopics() {
+        for (GroupChat chat : groupchats) {
+            FirebaseMessaging.getInstance().subscribeToTopic(chat.getId());
+        }
     }
 }

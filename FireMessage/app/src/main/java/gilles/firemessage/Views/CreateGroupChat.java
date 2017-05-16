@@ -76,7 +76,7 @@ public class CreateGroupChat extends AppCompatActivity {
         btngroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (editgroup.getText().toString() != "" && user != null) {
+                if (!editgroup.getText().toString().equals("") && user != null) {
                     //create the group or send back to main activity
                     Intent intent = new Intent();
                     intent.putExtra("grouptext", editgroup.getText().toString());
@@ -87,6 +87,7 @@ public class CreateGroupChat extends AppCompatActivity {
                     GroupChat groupchat = new GroupChat(id,editgroup.getText().toString());
                     chatsref.child(id).setValue(groupchat);
                     chatsref.child(id).child("users").setValue(addedUsers);
+
                     setResult(Activity.RESULT_OK,intent);
                     finish();
                 }
@@ -121,7 +122,15 @@ public class CreateGroupChat extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 User clickedUser = (User) adapterView.getItemAtPosition(i);
-                //TODO: when clicked on a user remove the button or change the ui to non clickable
+
+                for (User usr : addedUsers) {
+                    if(usr.getUid().equals(clickedUser.getUid())) {
+                        addedUsers.remove(clickedUser);
+                        view.findViewById(R.id.addImageView).setBackgroundResource(R.drawable.add);
+                        return;
+                    }
+                }
+                view.findViewById(R.id.addImageView).setBackgroundResource(R.drawable.remove);
                 addedUsers.add(clickedUser);
             }
         });
