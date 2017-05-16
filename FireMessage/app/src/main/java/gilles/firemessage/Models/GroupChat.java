@@ -1,6 +1,8 @@
 package gilles.firemessage.Models;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -11,8 +13,9 @@ public class GroupChat {
 
     private String id;
     private String title;
-    private List<Message> messages;
+
     private ArrayList<User> users;
+    //private HashMap<String,Boolean> users;
     private String lastMessage;
 
     public GroupChat(String id,String title) {
@@ -32,8 +35,20 @@ public class GroupChat {
         this.users = users;
     }
 
+
+    public GroupChat(String id, String title, ArrayList<User> users, String lastMessage) {
+        this.id = id;
+        this.title = title;
+        this.users = users;
+        this.lastMessage = lastMessage;
+    }
+
     public GroupChat() {
 
+    }
+
+    public ArrayList<User> getUsers() {
+        return users;
     }
 
     public String getId() {
@@ -48,5 +63,9 @@ public class GroupChat {
 
     public String getTitle() {
         return this.title;
+    }
+
+    public String getLastMessage() {
+        return lastMessage;
     }
 }

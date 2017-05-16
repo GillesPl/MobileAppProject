@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="gilles.firemessage">
 
+
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
@@ -27,19 +28,19 @@
         <activity
             android:name=".Views.LoginActivity"
             android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".Views.MessageActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-
-        <activity android:name=".Views.CreateGroupChat"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Views.CreateGroupChat"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Views.GroupMessageActivity"
+            android:label="@string/title_activity_group_message"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
+
+
 
 </manifest>

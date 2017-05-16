@@ -30,12 +30,12 @@
             android:textSize="18sp" />
 
         <TextView
+            android:id="@+id/textViewLastMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_alignStart="@+id/textViewGroupChat"
-            android:layout_below="@+id/textViewGroupChat"
-            android:text="This is a template for last message in chat"/>
+            android:layout_below="@+id/textViewGroupChat" />
 
     </RelativeLayout>
 

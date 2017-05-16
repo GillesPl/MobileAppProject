@@ -12,6 +12,7 @@ public class Constants {
     public static final String MESSAGE_LOCATION = "messages";
 
     public static final String GROUPID = "groupid";
+    public static final String GROUPNAME = "groupname";
 
     public static final int ADDGROUPRESULT = 1;
 

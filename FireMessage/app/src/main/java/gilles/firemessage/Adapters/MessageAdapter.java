@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import gilles.firemessage.Models.Message;
 import gilles.firemessage.Models.User;
@@ -52,21 +53,26 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         };
 
 
-
-
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.message_row, parent, false);
         }
 
-        if(currentuser == msg.getAuthor() ) {
-            convertView.setBackgroundColor(Color.BLUE);
+        TextView left = (TextView) convertView.findViewById(R.id.lefttext);
+        TextView right = (TextView) convertView.findViewById(R.id.righttext);
+
+
+        //LinearLayout msgline = (LinearLayout) v.findViewById(R.id.msgLine);
+        if(Objects.equals(msg.getAuthor().getEmail(), user.getEmail())) {
+            left.setText(msg.getMessage());
+            right.setText("");
+            right.setBackground(null);
         }
         else {
-            convertView.setBackgroundColor(Color.WHITE);
-        }
-        TextView title = (TextView) convertView.findViewById(R.id.textView_message);
-        title.setText(msg.getMessage());
+            right.setText(msg.getMessage());
 
+            left.setText("");
+            left.setBackground(null);
+        }
 
         return convertView;
 

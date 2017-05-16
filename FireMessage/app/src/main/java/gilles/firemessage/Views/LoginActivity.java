@@ -122,6 +122,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+    @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
@@ -261,9 +269,11 @@ private boolean validateForm() {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
 
+                        //TODO: FIX DEZE BULLSHIT KEY GENERATOR
                         //add user to database
-                        String id = userref.push().getKey();
+                        String id = mAuth.getCurrentUser().getUid();
                         userref.child(id).setValue(new User(id,email));
+
 
                         if (!task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, R.string.auth_failed,

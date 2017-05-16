@@ -8,4 +8,7 @@
     <color name="grey_300">#E0E0E0</color>
     <color name="border_text_primary">#357BE8</color>
     <color name="border_text_white">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="red">#D41F28</color>
+
 </resources>

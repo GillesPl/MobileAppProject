@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 import gilles.firemessage.Models.GroupChat;
@@ -37,11 +39,14 @@ public class GroupChatAdapter extends ArrayAdapter<GroupChat> {
 
         TextView title = (TextView) convertView.findViewById(R.id.textViewGroupChat);
         ImageView img = (ImageView) convertView.findViewById(R.id.imageViewGroupChat);
+        TextView lastmsg = (TextView) convertView.findViewById(R.id.textViewLastMessage);
 
         title.setText(chat.getTitle());
         //TODO:Set image to generated image??
 
-
+        if(chat.getLastMessage() != null) {
+            lastmsg.setText(chat.getLastMessage());
+        }
         return convertView;
 
 

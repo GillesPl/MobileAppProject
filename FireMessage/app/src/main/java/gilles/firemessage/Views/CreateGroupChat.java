@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -74,7 +76,7 @@ public class CreateGroupChat extends AppCompatActivity {
         btngroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (editgroup.getText().toString() != "") {
+                if (editgroup.getText().toString() != "" && user != null) {
                     //create the group or send back to main activity
                     Intent intent = new Intent();
                     intent.putExtra("grouptext", editgroup.getText().toString());
@@ -85,7 +87,6 @@ public class CreateGroupChat extends AppCompatActivity {
                     GroupChat groupchat = new GroupChat(id,editgroup.getText().toString());
                     chatsref.child(id).setValue(groupchat);
                     chatsref.child(id).child("users").setValue(addedUsers);
-
                     setResult(Activity.RESULT_OK,intent);
                     finish();
                 }
@@ -95,16 +96,14 @@ public class CreateGroupChat extends AppCompatActivity {
         usersref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                dataSnapshot.getChildrenCount();
-                //TODO:Maak performanter!!!
                 users.clear();
-                User currentuser = new User(user.getUid(),user.getEmail());
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     User post = postSnapshot.getValue(User.class);
-                    if (post.getEmail() != currentuser.getEmail()) {
-                        users.add(post);
+                    if(user != null) {
+                        if (!post.getEmail().equals(user.getEmail())) {
+                            users.add(post);
+                        }
                     }
-                    Log.e("Get Data", post.toString());
                 }
 
                 UsersAdapter adapter = new UsersAdapter(ctx,users);
@@ -148,6 +147,13 @@ public class CreateGroupChat extends AppCompatActivity {
         mAuth.addAuthStateListener(mAuthListener);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
 
 
     @Override
@@ -163,5 +169,4 @@ public class CreateGroupChat extends AppCompatActivity {
         onBackPressed();
         return true;
     }
-
 }
