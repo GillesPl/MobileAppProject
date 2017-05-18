@@ -74,7 +74,17 @@ public class GroupMessageActivity extends AppCompatActivity {
                 groupchat = dataSnapshot.getValue(GroupChat.class);
                 groupTitle.setText(groupchat.getTitle());
                 setTitle(groupchat.getTitle());
-                GroupMessageAdapter adapter = new GroupMessageAdapter(ctx,groupchat.getUsers());
+                ArrayList<User>users = new ArrayList<User>();
+                if(groupchat.getUsers() != null) {
+                    for (User usr : groupchat.getUsers()) {
+                        if(usr != null) {
+                            users.add(usr);
+                        }
+                    }
+                }
+
+
+                GroupMessageAdapter adapter = new GroupMessageAdapter(ctx,users);
                 usersList.setAdapter(adapter);
             }
 

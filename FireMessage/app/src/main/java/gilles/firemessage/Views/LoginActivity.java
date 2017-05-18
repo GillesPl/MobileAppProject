@@ -269,7 +269,7 @@ private boolean validateForm() {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
 
-                        //TODO: FIX DEZE BULLSHIT KEY GENERATOR
+
                         //add user to database
                         String id = mAuth.getCurrentUser().getUid();
                         userref.child(id).setValue(new User(id,email));
